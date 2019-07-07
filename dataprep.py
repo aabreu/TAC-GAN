@@ -50,13 +50,13 @@ def one_hot_encode_str_lbl(lbl, target, one_hot_targets):
         idx = target.index(lbl)
         return one_hot_targets[idx]
 
-def save_caption_vectors_flowers(data_dir, dt_range=(1, 103)) :
+def save_caption_vectors(dataset, data_dir, dt_range=(1, 103)) :
     import time
 
-    img_dir = join(data_dir, 'flowers/jpg')
-    all_caps_dir = join(data_dir, 'flowers/all_captions.txt')
-    target_file_path = os.path.join(data_dir, "flowers/allclasses.txt")
-    caption_dir = join(data_dir, 'flowers/text_c10')
+    img_dir = join(data_dir, dataset, 'jpg')
+    all_caps_dir = join(data_dir, dataset, 'all_captions.txt')
+    target_file_path = os.path.join(data_dir, dataset, "allclasses.txt")
+    caption_dir = join(data_dir, dataset, '/text_c10')
     image_files = [f for f in os.listdir(img_dir) if 'jpg' in f]
     print(image_files[300 :400])
     image_captions = {}
@@ -113,17 +113,17 @@ def save_caption_vectors_flowers(data_dir, dt_range=(1, 103)) :
     val_image_ids = img_ids[n_train_instances : -1]
 
     pickle.dump(image_captions,
-                open(os.path.join(data_dir, 'flowers', 'flowers_caps.pkl'), "wb"))
+                open(os.path.join(data_dir, dataset, dataset + '_caps.pkl'), "wb"))
 
     pickle.dump(tr_image_ids,
-                open(os.path.join(data_dir, 'flowers', 'train_ids.pkl'), "wb"))
+                open(os.path.join(data_dir, dataset, 'train_ids.pkl'), "wb"))
     pickle.dump(val_image_ids,
-                open(os.path.join(data_dir, 'flowers', 'val_ids.pkl'), "wb"))
+                open(os.path.join(data_dir, dataset, 'val_ids.pkl'), "wb"))
 
-    ec_pkl_path = (join(data_dir, 'flowers', 'flower_tv.pkl'))
+    ec_pkl_path = (join(data_dir, dataset, dataset + '_tv.pkl'))
     pickle.dump(encoded_captions, open(ec_pkl_path, "wb"))
 
-    fc_pkl_path = (join(data_dir, 'flowers', 'flower_tc.pkl'))
+    fc_pkl_path = (join(data_dir, dataset, dataset + '_tc.pkl'))
     pickle.dump(image_classes, open(fc_pkl_path, "wb"))
 
 def main() :
@@ -135,10 +135,7 @@ def main() :
     args = parser.parse_args()
 
     dataset_dir = join(args.data_dir, "datasets")
-    if args.dataset == 'flowers':
-        save_caption_vectors_flowers(dataset_dir)
-    else:
-        print('Preprocessor for this dataset is not available.')
+    save_caption_vectors(args.dataset, dataset_dir)
 
 
 if __name__ == '__main__' :
