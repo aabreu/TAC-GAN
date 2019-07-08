@@ -53,10 +53,10 @@ def one_hot_encode_str_lbl(lbl, target, one_hot_targets):
 def save_caption_vectors(dataset, data_dir, dt_range=(1, 103)) :
     import time
 
-    img_dir = join(data_dir, dataset, 'jpg')
-    all_caps_dir = join(data_dir, dataset, 'all_captions.txt')
+    img_dir = os.path.join(data_dir, dataset, 'jpg')
+    all_caps_dir = os.path.join(data_dir, dataset, 'all_captions.txt')
     target_file_path = os.path.join(data_dir, dataset, "allclasses.txt")
-    caption_dir = join(data_dir, dataset, '/text_c10')
+    caption_dir = os.path.join(data_dir, dataset, '/text_c10')
     image_files = [f for f in os.listdir(img_dir) if 'jpg' in f]
     print(image_files[300 :400])
     image_captions = {}
@@ -65,7 +65,7 @@ def save_caption_vectors(dataset, data_dir, dt_range=(1, 103)) :
     class_names = []
     img_ids = []
 
-    print("images dir dir: %s" % img_dir)
+    print("images dir: %s" % img_dir)
     print("caption dir: %s" % caption_dir)
     print("all caps dir: %s" % all_caps_dir)
 
@@ -73,7 +73,7 @@ def save_caption_vectors(dataset, data_dir, dt_range=(1, 103)) :
 
     for i in range(dt_range[0], dt_range[1]) :
         class_dir_name = 'class_%.5d' % (i)
-        class_dir = join(caption_dir, class_dir_name)
+        class_dir = os.path.join(caption_dir, class_dir_name)
         class_names.append(class_dir_name)
         class_dirs.append(class_dir)
 
