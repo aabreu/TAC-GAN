@@ -66,7 +66,6 @@ def save_caption_vectors(dataset, data_dir, dt_range=(1, 103)) :
     img_ids = []
 
     print("images dir dir: %s" % img_dir)
-    print("classes dir: %s" % class_dir)
     print("caption dir: %s" % caption_dir)
     print("all caps dir: %s" % all_caps_dir)
 
@@ -77,6 +76,9 @@ def save_caption_vectors(dataset, data_dir, dt_range=(1, 103)) :
         class_dir = join(caption_dir, class_dir_name)
         class_names.append(class_dir_name)
         class_dirs.append(class_dir)
+
+        print("classes dir: %s" % class_dir)
+
         onlyimgfiles = [f[0 :11] + ".jpg" for f in os.listdir(class_dir)
                                     if 'txt' in f]
         for img_file in onlyimgfiles:
