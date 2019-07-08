@@ -65,10 +65,10 @@ def save_caption_vectors(dataset, data_dir, dt_range=(1, 103)) :
     class_names = []
     img_ids = []
 
-	print("images dir dir: %s" % img_dir)
-	print("classes dir: %s" % class_dir)
-	print("caption dir: %s" % caption_dir)
-	print("all caps dir: %s" % all_caps_dir)
+    print("images dir dir: %s" % img_dir)
+    print("classes dir: %s" % class_dir)
+    print("caption dir: %s" % caption_dir)
+    print("all caps dir: %s" % all_caps_dir)
 
     target, one_hot_targets, n_target = get_one_hot_targets(target_file_path)
 
