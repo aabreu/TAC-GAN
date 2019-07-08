@@ -77,7 +77,7 @@ def save_caption_vectors(dataset, data_dir, dt_range=(1, 103)) :
         class_names.append(class_dir_name)
         class_dirs.append(class_dir)
 
-        print("classes dir: %s" % class_dir)
+        # print("classes dir: %s" % class_dir)
 
         onlyimgfiles = [f[0 :11] + ".jpg" for f in os.listdir(class_dir)
                                     if 'txt' in f]
@@ -105,10 +105,11 @@ def save_caption_vectors(dataset, data_dir, dt_range=(1, 103)) :
 
     model = skipthoughts.load_model()
     encoded_captions = {}
+    print("encoding %i captions" % len(image_captions))
     for i, img in enumerate(image_captions) :
         st = time.time()
         encoded_captions[img] = skipthoughts.encode(model, image_captions[img])
-        if i%20 == 0:
+        if i % 20 == 0:
             print(i, len(image_captions), img)
             print("Seconds", time.time() - st)
 
@@ -119,18 +120,27 @@ def save_caption_vectors(dataset, data_dir, dt_range=(1, 103)) :
     tr_image_ids = img_ids[0 :n_train_instances]
     val_image_ids = img_ids[n_train_instances : -1]
 
+    print("dumping %s" % os.path.join(data_dir, dataset, dataset + '_caps.pkl'))
+
     pickle.dump(image_captions,
                 open(os.path.join(data_dir, dataset, dataset + '_caps.pkl'), "wb"))
 
+    print("dumping %s" % os.path.join(data_dir, dataset, 'train_ids.pkl'))
     pickle.dump(tr_image_ids,
                 open(os.path.join(data_dir, dataset, 'train_ids.pkl'), "wb"))
+
+    print("dumping %s" % )
     pickle.dump(val_image_ids,
                 open(os.path.join(data_dir, dataset, 'val_ids.pkl'), "wb"))
 
     ec_pkl_path = (join(data_dir, dataset, dataset + '_tv.pkl'))
+
+    print("dumping %s" % ec_pkl_path)
     pickle.dump(encoded_captions, open(ec_pkl_path, "wb"))
 
     fc_pkl_path = (join(data_dir, dataset, dataset + '_tc.pkl'))
+
+    print("dumping %s" % fc_pkl_path)
     pickle.dump(image_classes, open(fc_pkl_path, "wb"))
 
 def main() :
