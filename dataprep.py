@@ -129,7 +129,7 @@ def save_caption_vectors(dataset, data_dir, dt_range=(1, 103)) :
     pickle.dump(tr_image_ids,
                 open(os.path.join(data_dir, dataset, 'train_ids.pkl'), "wb"))
 
-    print("dumping %s" % )
+    print("dumping %s" % os.path.join(data_dir, dataset, 'val_ids.pkl'))
     pickle.dump(val_image_ids,
                 open(os.path.join(data_dir, dataset, 'val_ids.pkl'), "wb"))
 
