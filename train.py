@@ -213,13 +213,14 @@ def main():
 		# Save the model after every epoch
 		if i % 1 == 0:
 			epoch_dir = join(model_chkpnts_dir, str(i))
+			print("saving epoch %s" % epoch_dir)
 			if not os.path.exists(epoch_dir):
 				os.makedirs(epoch_dir)
 
-			save_path = saver.save(sess,
-			                       join(epoch_dir,
-			                            "model_after_{}_epoch_{}.ckpt".
-			                                format(args.data_set, i)))
+			checkpoint_path = os.path.join(epoch_dir, "model_after_{}_epoch_{}.ckpt".format(args.data_set, i))
+
+			print("save model to %s" % checkpoint_path)
+			save_path = saver.save(sess, checkpoint_path)
 			val_captions, val_image_files, val_image_caps, val_image_ids = \
 				  get_val_caps_batch(args.batch_size, loaded_data,
 				                     args.data_set, datasets_root_dir)
