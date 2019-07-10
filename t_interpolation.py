@@ -101,7 +101,7 @@ def main():
 
     random.shuffle(loaded_data['image_list'])
     selected_images = loaded_data['image_list'][:args.n_images]
-    cap_id = [np.random.randint(0, 4) for cap_i in range(len(selected_images))]
+    cap_id = [0]#[np.random.randint(0, 4) for cap_i in range(len(selected_images))]
 
     print('Generating Images by interpolating the text features and z')
     bar = progressbar.ProgressBar(redirect_stdout=True,
@@ -215,7 +215,7 @@ def get_images_z_intr(sel_img, sel_cap, loaded_data, data_dir, data_set, batch_s
     for idx, image_id in enumerate(image_ids):
         image_file = join(data_dir,
                           data_set+'/jpg/' + image_id)
-        random_caption = random.randint(0, 4)
+        random_caption = 0#random.randint(0, 4)
         image_caps_ids.append(random_caption)
         captions[idx, :] = \
             loaded_data['captions'][image_id][random_caption][
