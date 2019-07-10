@@ -128,7 +128,7 @@ def load_training_data(data_dir, data_set, caption_vector_length, n_classes):
 		open(join(data_dir, data_set, data_set+'_tc.pkl'), "rb"))
 
 	flower_enc_captions = pickle.load(
-		open(join(data_dir, data_set, data_set'_tv.pkl'), "rb"))
+		open(join(data_dir, data_set, data_set+'_tv.pkl'), "rb"))
 	# h1 = h5py.File(join(data_dir, 'flower_tc.hdf5'))
 	tr_image_ids = pickle.load(
 		open(join(data_dir, data_set, 'train_ids.pkl'), "rb"))
