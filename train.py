@@ -359,7 +359,7 @@ def get_val_caps_batch(batch_size, loaded_data, data_set, data_dir):
 	for idx, image_id in enumerate(image_ids) :
 		image_file = join(data_dir,
 		                  data_set+'/jpg/' + image_id)
-		random_caption = random.randint(0, 4)
+		random_caption = 0#random.randint(0, 4)
 		captions[idx, :] = \
 			loaded_data['val_captions'][image_id][random_caption][
 			0 :loaded_data['max_caps_len']]
