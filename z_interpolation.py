@@ -100,7 +100,7 @@ def main():
 
     random.shuffle(loaded_data['image_list'])
     selected_images = loaded_data['image_list'][:args.n_images]
-    cap_id = 0#[np.random.randint(0, 4) for cap_i in range(len(selected_images))]
+    cap_id = [0]#[np.random.randint(0, 4) for cap_i in range(len(selected_images))]
 
     print('Generating Images by interpolating z')
     bar = progressbar.ProgressBar(redirect_stdout=True,
