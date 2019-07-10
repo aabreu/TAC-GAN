@@ -243,17 +243,17 @@ def main():
 
 def load_training_data(data_dir, data_set, caption_vector_length, n_classes) :
 	flower_str_captions = pickle.load(
-		open(os.join(data_dir, data_set, data_set+'_caps.pkl'), "rb"))
+		open(os.path.join(data_dir, data_set, data_set+'_caps.pkl'), "rb"))
 
 	img_classes = pickle.load(
-		open(os.join(data_dir, data_set, data_set+'_tc.pkl'), "rb"))
+		open(os.path.join(data_dir, data_set, data_set+'_tc.pkl'), "rb"))
 
 	flower_enc_captions = pickle.load(
-		open(os.join(data_dir, data_set, data_set+'_tv.pkl'), "rb"))
+		open(os.path.join(data_dir, data_set, data_set+'_tv.pkl'), "rb"))
 	tr_image_ids = pickle.load(
-		open(os.join(data_dir, data_set, 'train_ids.pkl'), "rb"))
+		open(os.path.join(data_dir, data_set, 'train_ids.pkl'), "rb"))
 	val_image_ids = pickle.load(
-		open(os.join(data_dir, data_set, 'val_ids.pkl'), "rb"))
+		open(os.path.join(data_dir, data_set, 'val_ids.pkl'), "rb"))
 
 	max_caps_len = caption_vector_length
 	tr_n_imgs = len(tr_image_ids)
