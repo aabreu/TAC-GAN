@@ -108,7 +108,7 @@ def main():
     for sel_i, (sel_img, sel_cap) in enumerate(zip(selected_images, cap_id)):
         captions, image_files, image_caps, image_ids, image_caps_ids = \
             get_images_z_intr(sel_img, sel_cap, loaded_data,
-                              datasets_root_dir, args.batch_size)
+                              datasets_root_dir, args.data_set, args.batch_size)
 
         z_noise_1 = np.full((args.batch_size, args.z_dim), -1.0)
         z_noise_2 = np.full((args.batch_size, args.z_dim), 1.0)
@@ -179,7 +179,7 @@ def save_distributed_image_batch(data_dir, generated_images, sel_i, z_i,
                       fake_image_255)
 
 
-def get_images_z_intr(sel_img, sel_cap, loaded_data, data_dir, batch_size=64):
+def get_images_z_intr(sel_img, sel_cap, loaded_data, data_dir, data_set, batch_size=64):
 
     captions = np.zeros((batch_size, loaded_data['max_caps_len']))
     batch_idx = np.random.randint(0, loaded_data['data_length'],
