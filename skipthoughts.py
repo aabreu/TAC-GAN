@@ -21,8 +21,8 @@ profile = False
 #-----------------------------------------------------------------------------#
 # Specify model and table locations here
 #-----------------------------------------------------------------------------#
-path_to_models = 'Data/skipthoughts/'
-path_to_tables = 'Data/skipthoughts/'
+path_to_models = '/content/TAC-GAN/Data/skipthoughts/'
+path_to_tables = '/content/TAC-GAN/Data/skipthoughts/'
 #-----------------------------------------------------------------------------#
 
 path_to_umodel = path_to_models + 'uni_skip.npz'
@@ -147,7 +147,7 @@ def encode(model, X, use_norm=True, verbose=True, batch_size=128, use_eos=False)
 			for ind, c in enumerate(caps):
 				ufeatures[c] = uff[ind]
 				bfeatures[c] = bff[ind]
-	
+
 	features = numpy.c_[ufeatures, bfeatures]
 	return features
 
@@ -422,4 +422,3 @@ def gru_layer(tparams, state_below, options, prefix='gru', mask=None, **kwargs):
 								strict=True)
 	rval = [rval]
 	return rval
-
