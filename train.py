@@ -211,7 +211,7 @@ def main():
 									 val_viz_cnt)
 
 		# Save the model after save_every epoch
-		if i % args.save_every == 0 && i != 0:
+		if i % args.save_every == 0 and i != 0:
 			epoch_dir = os.path.join(model_chkpnts_dir, str(i))
 			print("saving epoch %s" % epoch_dir)
 			if not os.path.exists(epoch_dir):
