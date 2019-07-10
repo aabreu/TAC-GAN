@@ -242,40 +242,35 @@ def main():
 
 
 def load_training_data(data_dir, data_set, caption_vector_length, n_classes) :
-	if data_set == 'flowers' :
-		flower_str_captions = pickle.load(
-			open(join(data_dir, 'flowers', 'flowers_caps.pkl'), "rb"))
+	flower_str_captions = pickle.load(
+		open(os.join(data_dir, data_set, data_set+'_caps.pkl'), "rb"))
 
-		img_classes = pickle.load(
-			open(join(data_dir, 'flowers', 'flower_tc.pkl'), "rb"))
+	img_classes = pickle.load(
+		open(os.join(data_dir, data_set, data_set+'_tc.pkl'), "rb"))
 
-		flower_enc_captions = pickle.load(
-			open(join(data_dir, 'flowers', 'flower_tv.pkl'), "rb"))
-		tr_image_ids = pickle.load(
-			open(join(data_dir, 'flowers', 'train_ids.pkl'), "rb"))
-		val_image_ids = pickle.load(
-			open(join(data_dir, 'flowers', 'val_ids.pkl'), "rb"))
+	flower_enc_captions = pickle.load(
+		open(os.join(data_dir, data_set, data_set+'_tv.pkl'), "rb"))
+	tr_image_ids = pickle.load(
+		open(os.join(data_dir, data_set, 'train_ids.pkl'), "rb"))
+	val_image_ids = pickle.load(
+		open(os.join(data_dir, data_set, 'val_ids.pkl'), "rb"))
 
-		max_caps_len = caption_vector_length
-		tr_n_imgs = len(tr_image_ids)
-		val_n_imgs = len(val_image_ids)
+	max_caps_len = caption_vector_length
+	tr_n_imgs = len(tr_image_ids)
+	val_n_imgs = len(val_image_ids)
 
-		return {
-			'image_list'    : tr_image_ids,
-			'captions'      : flower_enc_captions,
-			'data_length'   : tr_n_imgs,
-			'classes'       : img_classes,
-			'n_classes'     : n_classes,
-			'max_caps_len'  : max_caps_len,
-			'val_img_list'  : val_image_ids,
-			'val_captions'  : flower_enc_captions,
-			'val_data_len'  : val_n_imgs,
-			'str_captions'  : flower_str_captions
-		}
-
-	else :
-		raise Exception('No Dataset Found')
-
+	return {
+		'image_list'    : tr_image_ids,
+		'captions'      : flower_enc_captions,
+		'data_length'   : tr_n_imgs,
+		'classes'       : img_classes,
+		'n_classes'     : n_classes,
+		'max_caps_len'  : max_caps_len,
+		'val_img_list'  : val_image_ids,
+		'val_captions'  : flower_enc_captions,
+		'val_data_len'  : val_n_imgs,
+		'str_captions'  : flower_str_captions
+	}
 
 def initialize_directories(args):
 	model_dir = join(args.data_dir, 'training', args.model_name)
@@ -354,89 +349,83 @@ def save_for_vis(data_dir, real_images, generated_images, image_files,
 
 def get_val_caps_batch(batch_size, loaded_data, data_set, data_dir):
 
-	if data_set == 'flowers':
-		captions = np.zeros((batch_size, loaded_data['max_caps_len']))
+	captions = np.zeros((batch_size, loaded_data['max_caps_len']))
 
-		batch_idx = np.random.randint(0, loaded_data['val_data_len'],
-		                              size = batch_size)
-		image_ids = np.take(loaded_data['val_img_list'], batch_idx)
-		image_files = []
-		image_caps = []
-		for idx, image_id in enumerate(image_ids) :
-			image_file = join(data_dir,
-			                  'flowers/jpg/' + image_id)
-			random_caption = random.randint(0, 4)
-			captions[idx, :] = \
-				loaded_data['val_captions'][image_id][random_caption][
-				0 :loaded_data['max_caps_len']]
+	batch_idx = np.random.randint(0, loaded_data['val_data_len'],
+	                              size = batch_size)
+	image_ids = np.take(loaded_data['val_img_list'], batch_idx)
+	image_files = []
+	image_caps = []
+	for idx, image_id in enumerate(image_ids) :
+		image_file = join(data_dir,
+		                  data_set+'/jpg/' + image_id)
+		random_caption = random.randint(0, 4)
+		captions[idx, :] = \
+			loaded_data['val_captions'][image_id][random_caption][
+			0 :loaded_data['max_caps_len']]
 
-			image_caps.append(loaded_data['str_captions']
-			                  [image_id][random_caption])
-			image_files.append(image_file)
+		image_caps.append(loaded_data['str_captions']
+		                  [image_id][random_caption])
+		image_files.append(image_file)
 
-		return captions, image_files, image_caps, image_ids
-	else:
-		raise Exception('Dataset not found')
+	return captions, image_files, image_caps, image_ids
 
 
 def get_training_batch(batch_no, batch_size, image_size, z_dim, split,
                        data_dir, data_set, loaded_data = None) :
-	if data_set == 'flowers':
-		real_images = np.zeros((batch_size, image_size, image_size, 3))
-		wrong_images = np.zeros((batch_size, image_size, image_size, 3))
-		captions = np.zeros((batch_size, loaded_data['max_caps_len']))
-		real_classes = np.zeros((batch_size, loaded_data['n_classes']))
-		wrong_classes = np.zeros((batch_size, loaded_data['n_classes']))
+	real_images = np.zeros((batch_size, image_size, image_size, 3))
+	wrong_images = np.zeros((batch_size, image_size, image_size, 3))
+	captions = np.zeros((batch_size, loaded_data['max_caps_len']))
+	real_classes = np.zeros((batch_size, loaded_data['n_classes']))
+	wrong_classes = np.zeros((batch_size, loaded_data['n_classes']))
 
-		cnt = 0
-		image_files = []
-		image_caps = []
-		image_ids = []
-		for i in range(batch_no * batch_size,
-		               batch_no * batch_size + batch_size) :
-			idx = i % len(loaded_data['image_list'])
-			image_file = join(data_dir,
-			                  'flowers/jpg/' + loaded_data['image_list'][idx])
+	cnt = 0
+	image_files = []
+	image_caps = []
+	image_ids = []
+	for i in range(batch_no * batch_size,
+	               batch_no * batch_size + batch_size) :
+		idx = i % len(loaded_data['image_list'])
+		image_file = join(data_dir,
+		                  data_set+'/jpg/' + loaded_data['image_list'][idx])
 
-			image_ids.append(loaded_data['image_list'][idx])
+		image_ids.append(loaded_data['image_list'][idx])
 
-			image_array = image_processing.load_image_array_flowers(image_file,
-			                                                image_size)
-			real_images[cnt, :, :, :] = image_array
+		image_array = image_processing.load_image_array_flowers(image_file,
+		                                                image_size)
+		real_images[cnt, :, :, :] = image_array
 
-			# Improve this selection of wrong image
-			wrong_image_id = random.randint(0,
-			                                len(loaded_data['image_list']) - 1)
-			wrong_image_file = join(data_dir,
-			                        'flowers/jpg/' + loaded_data['image_list'][
-				                                            wrong_image_id])
-			wrong_image_array = image_processing.load_image_array_flowers(wrong_image_file,
-			                                                      image_size)
-			wrong_images[cnt, :, :, :] = wrong_image_array
-			
-			wrong_classes[cnt, :] = loaded_data['classes'][loaded_data['image_list'][
-									wrong_image_id]][0 :loaded_data['n_classes']]
+		# Improve this selection of wrong image
+		wrong_image_id = random.randint(0,
+		                                len(loaded_data['image_list']) - 1)
+		wrong_image_file = join(data_dir,
+		                        data_set+'/jpg/' + loaded_data['image_list'][
+			                                            wrong_image_id])
+		wrong_image_array = image_processing.load_image_array_flowers(wrong_image_file,
+		                                                      image_size)
+		wrong_images[cnt, :, :, :] = wrong_image_array
 
-			random_caption = random.randint(0, 4)
-			captions[cnt, :] = \
-			loaded_data['captions'][loaded_data['image_list'][idx]][
-								random_caption][0 :loaded_data['max_caps_len']]
+		wrong_classes[cnt, :] = loaded_data['classes'][loaded_data['image_list'][
+								wrong_image_id]][0 :loaded_data['n_classes']]
 
-			real_classes[cnt, :] = \
-				loaded_data['classes'][loaded_data['image_list'][idx]][
-												0 :loaded_data['n_classes']]
-			str_cap = loaded_data['str_captions'][loaded_data['image_list']
-								[idx]][random_caption]
+		random_caption = random.randint(0, 4)
+		captions[cnt, :] = \
+		loaded_data['captions'][loaded_data['image_list'][idx]][
+							random_caption][0 :loaded_data['max_caps_len']]
 
-			image_files.append(image_file)
-			image_caps.append(str_cap)
-			cnt += 1
+		real_classes[cnt, :] = \
+			loaded_data['classes'][loaded_data['image_list'][idx]][
+											0 :loaded_data['n_classes']]
+		str_cap = loaded_data['str_captions'][loaded_data['image_list']
+							[idx]][random_caption]
 
-		z_noise = np.random.uniform(-1, 1, [batch_size, z_dim])
-		return real_images, wrong_images, captions, z_noise, image_files, \
-		       real_classes, wrong_classes, image_caps, image_ids
-	else:
-		raise Exception('Dataset not found')
+		image_files.append(image_file)
+		image_caps.append(str_cap)
+		cnt += 1
+
+	z_noise = np.random.uniform(-1, 1, [batch_size, z_dim])
+	return real_images, wrong_images, captions, z_noise, image_files, \
+	       real_classes, wrong_classes, image_caps, image_ids
 
 
 if __name__ == '__main__' :
