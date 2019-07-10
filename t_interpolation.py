@@ -117,11 +117,11 @@ def main():
 
             captions_1, image_files_1, image_caps_1, image_ids_1, \
             image_caps_ids_1 = get_images_z_intr(sel_img, sel_cap,
-                                             loaded_data, datasets_root_dir)
+                                             loaded_data, datasets_root_dir, args.data_set)
 
             captions_2, image_files_2, image_caps_2, image_ids_2, \
             image_caps_ids_2 = get_images_z_intr(sel_img_2, sel_cap_2,
-                                             loaded_data, datasets_root_dir)
+                                             loaded_data, datasets_root_dir, args.data_set)
 
             z_noise_1 = np.random.uniform(-1, 1, [args.batch_size, args.z_dim])
             z_noise_2 = np.random.uniform(-1, 1, [args.batch_size, args.z_dim])
@@ -150,43 +150,38 @@ def main():
     print('Finished generating interpolated images')
 
 def load_training_data(data_dir, data_set, caption_vector_length, n_classes):
-    if data_set == 'flowers':
-        flower_str_captions = pickle.load(
-            open(join(data_dir, 'flowers', 'flowers_caps.pkl'), "rb"))
+    flower_str_captions = pickle.load(
+        open(join(data_dir, data_set, data_set+'_caps.pkl'), "rb"))
 
-        img_classes = pickle.load(
-            open(join(data_dir, 'flowers', 'flower_tc.pkl'), "rb"))
+    img_classes = pickle.load(
+        open(join(data_dir, data_set, data_set+'_tc.pkl'), "rb"))
 
-        flower_enc_captions = pickle.load(
-            open(join(data_dir, 'flowers', 'flower_tv.pkl'), "rb"))
-        # h1 = h5py.File(join(data_dir, 'flower_tc.hdf5'))
-        tr_image_ids = pickle.load(
-            open(join(data_dir, 'flowers', 'train_ids.pkl'), "rb"))
-        val_image_ids = pickle.load(
-            open(join(data_dir, 'flowers', 'val_ids.pkl'), "rb"))
+    flower_enc_captions = pickle.load(
+        open(join(data_dir, data_set, data_set+'_tv.pkl'), "rb"))
+    # h1 = h5py.File(join(data_dir, 'flower_tc.hdf5'))
+    tr_image_ids = pickle.load(
+        open(join(data_dir, data_set, 'train_ids.pkl'), "rb"))
+    val_image_ids = pickle.load(
+        open(join(data_dir, data_set, 'val_ids.pkl'), "rb"))
 
-        # n_classes = n_classes
-        max_caps_len = caption_vector_length
+    # n_classes = n_classes
+    max_caps_len = caption_vector_length
 
-        tr_n_imgs = len(tr_image_ids)
-        val_n_imgs = len(val_image_ids)
+    tr_n_imgs = len(tr_image_ids)
+    val_n_imgs = len(val_image_ids)
 
-        return {
-            'image_list': tr_image_ids,
-            'captions': flower_enc_captions,
-            'data_length': tr_n_imgs,
-            'classes': img_classes,
-            'n_classes': n_classes,
-            'max_caps_len': max_caps_len,
-            'val_img_list': val_image_ids,
-            'val_captions': flower_enc_captions,
-            'val_data_len': val_n_imgs,
-            'str_captions': flower_str_captions
-        }
-
-    else:
-        raise Exception('Dataset Not Found')
-
+    return {
+        'image_list': tr_image_ids,
+        'captions': flower_enc_captions,
+        'data_length': tr_n_imgs,
+        'classes': img_classes,
+        'n_classes': n_classes,
+        'max_caps_len': max_caps_len,
+        'val_img_list': val_image_ids,
+        'val_captions': flower_enc_captions,
+        'val_data_len': val_n_imgs,
+        'str_captions': flower_str_captions
+    }
 
 def save_distributed_image_batch(data_dir, generated_images, sel_i, sel_2, z_i,
                                  t_i, sel_img, sel_cap, sel_img_2, sel_cap_2,
@@ -208,7 +203,7 @@ def save_distributed_image_batch(data_dir, generated_images, sel_i, sel_2, z_i,
                       fake_image_255)
 
 
-def get_images_z_intr(sel_img, sel_cap, loaded_data, data_dir, batch_size=64):
+def get_images_z_intr(sel_img, sel_cap, loaded_data, data_dir, data_set, batch_size=64):
 
     captions = np.zeros((batch_size, loaded_data['max_caps_len']))
     batch_idx = np.random.randint(0, loaded_data['data_length'],
@@ -219,7 +214,7 @@ def get_images_z_intr(sel_img, sel_cap, loaded_data, data_dir, batch_size=64):
     image_caps_ids = []
     for idx, image_id in enumerate(image_ids):
         image_file = join(data_dir,
-                          'flowers/jpg/' + image_id)
+                          data_set+'/jpg/' + image_id)
         random_caption = random.randint(0, 4)
         image_caps_ids.append(random_caption)
         captions[idx, :] = \
@@ -233,7 +228,7 @@ def get_images_z_intr(sel_img, sel_cap, loaded_data, data_dir, batch_size=64):
             idx = idx + 1
             image_id = sel_img
             image_file = join(data_dir,
-                              'flowers/jpg/' + sel_img)
+                              data_set+'/jpg/' + sel_img)
             random_caption = sel_cap
             image_caps_ids.append(random_caption)
             captions[idx, :] = \
