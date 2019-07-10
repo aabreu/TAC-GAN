@@ -408,7 +408,7 @@ def get_training_batch(batch_no, batch_size, image_size, z_dim, split,
 		wrong_classes[cnt, :] = loaded_data['classes'][loaded_data['image_list'][
 								wrong_image_id]][0 :loaded_data['n_classes']]
 
-		random_caption = random.randint(0, 4)
+		random_caption = 0#random.randint(0, 4)
 		captions[cnt, :] = \
 		loaded_data['captions'][loaded_data['image_list'][idx]][
 							random_caption][0 :loaded_data['max_caps_len']]
