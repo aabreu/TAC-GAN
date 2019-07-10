@@ -174,7 +174,8 @@ def main():
 			global_step += 1
 			sess.run(gs_assign_op)
 			batch_no += 1
-			if (batch_no % args.save_every) == 0 and batch_no != 0:
+			if (i % args.save_every) == 0 and i != 0:
+			# if (batch_no % args.save_every) == 0 and batch_no != 0:
 				print("Saving Images and the Model\n\n")
 
 				save_for_vis(model_samples_dir, real_images, gen, image_files,
