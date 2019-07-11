@@ -18,11 +18,15 @@ def load_image_array_flowers(image_file, image_size):
 
 	img_resized = skimage.transform.resize(img, (image_size, image_size))
 
+	if len(img.shape) == 4:
+		print("#### removing alpha channel ####")
+		img = img[:,:,:3]
+
 	# FLIP HORIZONTAL WIRH A PROBABILITY 0.5
 	if random.random() > 0.5:
 		img_resized = np.fliplr(img_resized)
-	
-	
+
+
 	return img_resized.astype('float32')
 
 def load_image_array(image_file, image_size,
